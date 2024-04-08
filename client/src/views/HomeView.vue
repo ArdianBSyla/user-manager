@@ -5,7 +5,7 @@ import {useRouter} from "vue-router";
 
 const users = ref([]);
 const page = ref(1);
-const size = ref(10);
+const size = ref(5);
 const total = ref(0);
 const loading = ref(false);
 const searchQuery = ref('');
@@ -118,7 +118,7 @@ onMounted(fetchUsers);
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="page"
-        :page-sizes="[10, 20, 30, 50]"
+        :page-sizes="[size]"
         :page-size="size"
         layout="total, sizes, prev, pager, next, jumper"
         class="pagination"
