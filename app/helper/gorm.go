@@ -15,7 +15,15 @@ const (
 	dbname   = "user_manager"
 )
 
-func NewGormDB() *gorm.DB {
+type DBConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+}
+
+func NewGormDB(dbConfig DBConfig) *gorm.DB {
 	sqlInfo := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, password, host, port, dbname)
 
 	db, err := gorm.Open(mysql.Open(sqlInfo), &gorm.Config{})

@@ -7,13 +7,29 @@ import (
 	"github.com/personal/user-manager-backend/app/repository"
 	"github.com/personal/user-manager-backend/app/service"
 	"net/http"
+	"os"
 	"time"
 )
 
 func main() {
+	// Getting the db name field from env file
+	dbName := os.Getenv("DB_NAME")         // user_manager
+	dbUser := os.Getenv("DB_USER")         // root
+	dbPassword := os.Getenv("DB_PASSWORD") // password
+	dbHost := os.Getenv("DB_HOST")         // localhost
+	dbPort := os.Getenv("DB_PORT")         // 3306
+
+	// Getting the db config from env file
+	dbConfig := helper.DBConfig{
+		Host:     dbHost,
+		Port:     dbPort,
+		User:     dbUser,
+		Password: dbPassword,
+		DBName:   dbName,
+	}
 
 	// Database connection
-	db := helper.NewGormDB()
+	db := helper.NewGormDB(dbConfig)
 
 	// Initialize the repository
 	userRepo := repository.NewUserRepository(db)
