@@ -36,11 +36,11 @@ func NewRouter(
 	userRouter := router.Group("/users")
 
 	userRouter.POST("", userController.CreateUser)
-	userRouter.GET("", userController.GetUsers)
+	userRouter.GET("", userController.SearchUsers)
 	userRouter.GET("/:id", userController.GetUser)
 	userRouter.PUT("/:id", userController.UpdateUser)
 	userRouter.DELETE("/:id", userController.DeleteUser)
-	userRouter.GET("/search", userController.SearchUsers)
+	//userRouter.GET("/search", userController.SearchUsers)
 
 	return service
 }

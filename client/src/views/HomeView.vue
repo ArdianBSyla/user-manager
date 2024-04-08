@@ -1,24 +1,38 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import axios from 'axios';
 import {useRouter} from "vue-router";
 
 const users = ref([]);
 const page = ref(1);
 const size = ref(10);
+const total = ref(0);
 const loading = ref(false);
 const searchQuery = ref('');
 
 const router = useRouter()
 
+watch(searchQuery, () => {
+  debouncedSearch();
+});
+
+watch(page, () => {
+  fetchUsers()
+})
+
+watch(size, () =>{
+  fetchUsers()
+})
+
 const fetchUsers = async () => {
   try {
     loading.value = true;
     const response = await axios.get<any>(
-        `http://localhost:3000/api/v1/users?page=${page.value}&size=${size.value}`
+        `http://localhost:3000/api/v1/users?page=${page.value}&size=${size.value}&query=${searchQuery.value}`
     );
     users.value = response.data.data;
-    loading.value = true;
+    loading.value = false;
+    total.value = response.data.total;
     console.log(response.data.data);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -39,6 +53,26 @@ const editUser = (user: any) => {
   router.push('/edit?id=' + user.id);
 };
 
+const debounce = (func: Function, delay: number) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return (...args: any[]) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
+const debouncedSearch = debounce(fetchUsers, 500);
+
+const handleSizeChange = (currentPage: number, pageSize: number) => {
+  size.value = pageSize;
+}
+
+const handleCurrentChange = (currentPage: number) => {
+  page.value = currentPage
+}
+
 onMounted(fetchUsers);
 </script>
 
@@ -53,6 +87,7 @@ onMounted(fetchUsers);
       </RouterLink>
 
     </div>
+    <div class="loader">Loading ...</div>
     <el-table
         :data="users"
         width="80vw"
@@ -79,6 +114,17 @@ onMounted(fetchUsers);
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="size"
+        layout="total, sizes, prev, pager, next, jumper"
+        class="pagination"
+        background
+        :total="total">
+    </el-pagination>
   </div>
 
 </template>
@@ -110,6 +156,25 @@ onMounted(fetchUsers);
 .add-user-btn:hover {
   background-color: #45a049;
 }
+
+.search-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pagination {
+  margin-top: 10px;
+}
+
 
 
 </style>

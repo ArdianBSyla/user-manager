@@ -18,27 +18,6 @@ func NewUserController(userService service.UserService) *UserController {
 	return &UserController{userService: userService}
 }
 
-func (c *UserController) GetUsers(ctx *gin.Context) {
-	page, size := 1, 10
-
-	if p, err := strconv.Atoi(ctx.Query("page")); err == nil {
-		page = p
-	}
-
-	if s, err := strconv.Atoi(ctx.Query("size")); err == nil {
-		size = s
-	}
-
-	users, err := c.userService.GetUsers(ctx, page, size)
-	if err != nil {
-		log.Errorf("failed to fetch users: %v", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch users"})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, users)
-}
-
 func (c *UserController) GetUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -167,12 +146,6 @@ func (c *UserController) DeleteUser(ctx *gin.Context) {
 
 func (c *UserController) SearchUsers(ctx *gin.Context) {
 	query := ctx.Query("query")
-	if query == "" {
-		log.Error("query is required")
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "query is required"})
-
-		return
-	}
 
 	page, size := 1, 10
 

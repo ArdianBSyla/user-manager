@@ -52,10 +52,10 @@ func TestUserController_GetUsersSuccess(t *testing.T) {
 
 	userController, userService := createControllerAndServices(t, mockCtrl)
 
-	userService.EXPECT().GetUsers(gomock.Any(), 1, 10).Return(&dto.UserDtoPaginated{}, nil)
+	userService.EXPECT().Search(gomock.Any(), "", 1, 10).Return(&dto.UserDtoPaginated{}, nil)
 
 	r := gin.Default()
-	r.GET("/api/v1/users", userController.GetUsers)
+	r.GET("/api/v1/users", userController.SearchUsers)
 
 	req, err := http.NewRequest(http.MethodGet, "/api/v1/users", nil)
 	if err != nil {
@@ -75,10 +75,10 @@ func TestUserController_GetUsersInternalServerError(t *testing.T) {
 
 	userController, userService := createControllerAndServices(t, mockCtrl)
 
-	userService.EXPECT().GetUsers(gomock.Any(), 1, 10).Return(nil, errors.New("failed to fetch users"))
+	userService.EXPECT().Search(gomock.Any(), "", 1, 10).Return(nil, errors.New("failed to fetch users"))
 
 	r := gin.Default()
-	r.GET("/api/v1/users", userController.GetUsers)
+	r.GET("/api/v1/users", userController.SearchUsers)
 
 	req, err := http.NewRequest(http.MethodGet, "/api/v1/users", nil)
 	if err != nil {
