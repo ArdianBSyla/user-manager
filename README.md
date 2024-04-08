@@ -61,7 +61,7 @@ npm install
 
 2. Run the following command to start the frontend application:
 ```bash
-npm run serve
+npm run dev
 ```
 
 The frontend application will start on port `5173`.

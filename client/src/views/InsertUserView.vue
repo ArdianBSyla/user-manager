@@ -24,7 +24,7 @@ import {useRoute, useRouter} from 'vue-router'
     const route = useRoute()
 const router = useRouter();
 
-const edit = ref( !!route.query.id  )
+const edit = ref(!!route.query.id)
     const user = ref({
       first_name: '',
       last_name: '',

@@ -15,7 +15,7 @@ const ErrUserNotFound = "user not found"
 type UserService interface {
 	CreateUser(ctx *gin.Context, user *dto.CreateUserDto) error
 	GetUser(ctx *gin.Context, id int) (*dto.UserDto, error)
-	GetUsers(ctx *gin.Context, page, size int) (*dto.UserDtoPaginated, error)
+	//GetUsers(ctx *gin.Context, page, size int) (*dto.UserDtoPaginated, error)
 	UpdateUser(ctx *gin.Context, user *dto.CreateUserDto) error
 	DeleteUser(ctx *gin.Context, id int) error
 	FindCompanyByID(ctx *gin.Context, id int) (*dto.CompanyDto, error)
@@ -54,27 +54,6 @@ func (s *userService) GetUser(ctx *gin.Context, id int) (*dto.UserDto, error) {
 	}
 
 	return user, nil
-}
-
-func (s *userService) GetUsers(ctx *gin.Context, page, size int) (*dto.UserDtoPaginated, error) {
-	users, err := s.userRepo.FindAll(ctx, page, size)
-	if err != nil {
-		log.Errorf("failed to fetch users: %v", err)
-
-		return nil, errors.New("failed to fetch users")
-	}
-
-	usersCount, err := s.userRepo.Count(ctx)
-	if err != nil {
-		log.Errorf("failed to count users: %v", err)
-
-		return nil, errors.New("failed to get count for users")
-	}
-
-	return &dto.UserDtoPaginated{
-		Data:  users,
-		Total: usersCount,
-	}, nil
 }
 
 func (s *userService) UpdateUser(ctx *gin.Context, user *dto.CreateUserDto) error {
