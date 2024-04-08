@@ -26,7 +26,7 @@ go run main.go
 The backend server will start on port `3000`.
 
 Here are the endpoints of the backend server:
-1. `GET /api/v1/users` - Get all users
+1. `GET /api/v1/users?query={query}&page={page}&size={size}` - Get all users
 2. `GET /api/v1/users/{id}` - Get a user by id
 3. `POST /api/v1/users` - Create a user with the request body:
 ```json
@@ -47,7 +47,6 @@ Here are the endpoints of the backend server:
 }
 ```
 5. `DELETE /api/v1/users/{id}` - Delete a user by id
-6. `GET /api/v1/users/search?query={query}` - Search for users by query
 
 ## Frontend
 Frontend application is inside `client/` directory in the root directory of the project.
